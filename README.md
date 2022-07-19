@@ -81,6 +81,7 @@ You can use the following variables to configure mongodb persistence:
 | `MONGO_CONNECTION_STRING` | string | `true` | MongoDB Connection String. Please refer to the [MongoDB Documentation](https://www.mongodb.com/docs/manual/reference/connection-string/) to learn more about connection strings.
 | `MONGO_DB_NAME` | string | `true` | Name of the Database the data sould be stored in
 | `MONGO_COL_PREFIX` | string | `false` | Prefix for the MongoDB Collections used by this module. The default is an empty String.
+
 Instead of setting the variables on environment level, you can also set them on application level.
 ```python
 class DogSchool(Application):
