@@ -55,6 +55,18 @@ os.environ['PERSISTENCE_MODULE'] = 'eventsourcing_mongodb'
 os.environ['MONGO_CONNECTION_STRING'] = 'mongodb://localhost'
 os.environ['MONGO_DB_NAME'] = 'EventSourcing'
 ```
+Instead of setting the variables on environment level, you can also set them on application level.
+```python
+class DogSchool(Application):
+    env = {
+        'PERSISTENCE_MODULE': 'eventsourcing_mongodb',
+        'MONGO_CONNECTION_STRING': 'mongodb://localhost',
+        'MONGO_DB_NAME': 'EventSourcing',
+        ...
+    }
+    ...
+```
+
 Construct and use the application in the usual way.
 ```python
 dog_school = DogSchool()
@@ -82,15 +94,5 @@ You can use the following variables to configure mongodb persistence:
 | `MONGO_DB_NAME` | string | `true` | Name of the Database the data sould be stored in
 | `MONGO_COL_PREFIX` | string | `false` | Prefix for the MongoDB Collections used by this module. The default is an empty String.
 
-Instead of setting the variables on environment level, you can also set them on application level.
-```python
-class DogSchool(Application):
-    env = {
-        'PERSISTENCE_MODULE': 'eventsourcing_mongodb',
-        'MONGO_CONNECTION_STRING': 'mongodb://localhost',
-        'MONGO_DB_NAME': 'EventSourcing',
-        ...
-    }
-    ...
-```
+
 
