@@ -26,7 +26,7 @@ class MongoDBAggregateRecorder(AggregateRecorder):
             desc: bool = False,
             limit: Optional[int] = None,
     ) -> List[StoredEvent]:
-        query = self._build_select_events_query(originator_id, gt, lte)
+        query = self._select_events_query(originator_id, gt, lte)
         collection = self.datastore.get_collection(self.events_col_name)
         cursor = collection.find(query)
         cursor = cursor.sort('originator_version', pymongo.DESCENDING if desc else pymongo.ASCENDING)
@@ -61,9 +61,7 @@ class MongoDBAggregateRecorder(AggregateRecorder):
         ) for doc in documents]
 
     @classmethod
-    def _build_select_events_query(cls, originator_id: UUID,
-                                   gt: Optional[int] = None,
-                                   lte: Optional[int] = None) -> dict:
+    def _select_events_query(cls, originator_id: UUID, gt: Optional[int] = None, lte: Optional[int] = None) -> dict:
         query = {'originator_id': {'$eq': originator_id}}
         if gt:
             query['version'] = {'$gte': gt}
