@@ -48,7 +48,7 @@ To configure your Application for using MongoDB for persistence, you need to set
 to `'eventsourcing_mongodb'`.
 Furthermore, you need to set the environment variables `MONGO_CONNECTION_STRING` and `MONGO_DB_NAME`. 
 Please refer to the [MongoDB Documentation](https://www.mongodb.com/docs/manual/reference/connection-string/)
-to learn more about connection strings. For a list of all available variables, please refer to the Available Environment Variables Section.
+to learn more about connection strings. You can read more about the available variables [here](#available-environment-variables) .
 
 ```python
 import os
