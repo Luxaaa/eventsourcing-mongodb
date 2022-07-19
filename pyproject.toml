@@ -1,0 +1,30 @@
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eventsourcing-mongodb"
+version = "1.0.0"
+description = "An extension package for the Python Eventsourcing library that provides a persistence module for MongoDB."
+readme = "README.md"
+authors = [{ name = "Luxaaa"}]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["eventsourcing", "mongodb"]
+dependencies = [
+    "eventsourcing >= 9.2.6",
+    "pymongo >= 4.1.1",
+]
+
+requires-python = ">=3.7"
+
+[project.optional-dependencies]
+dev = []
+
+[project.urls]
+Homepage = "https://github.com/Luxaaa/eventsourcing-mongodb"

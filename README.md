@@ -9,7 +9,7 @@ Use pip to install the [stable distribution](https://pypi.org/project/eventsourc
 from the Python Package Index. Please note, it is recommended to
 install Python packages into a Python virtual environment.
 
-    $ pip install eventsourcing_mongodb
+    $ pip install eventsourcing-mongodb
 
 ## Getting started
 Define Aggregates and Applications the usual way. Please refer to the [Eventsourcing Documentation](https://eventsourcing.readthedocs.io/en/stable/) for more detailed examples.
@@ -35,7 +35,7 @@ class DogSchool(Application):
         return dog.id
 
     def add_trick(self, dog_id: UUID, trick: str):
-        dog = self.repository.get(Dog.create_id(name))
+        dog = self.repository.get(dog_id)
         dog.add_trick(trick)
         self.save(dog)
 
