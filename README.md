@@ -92,7 +92,8 @@ You can use the following variables to configure mongodb persistence:
 | `PERSISTENCE_MODULE` | `'eventsourcing_mongodb'` | `true` | configures the application to use this module for persistence. 
 | `MONGO_CONNECTION_STRING` | string | `true` | MongoDB Connection String. Please refer to the [MongoDB Documentation](https://www.mongodb.com/docs/manual/reference/connection-string/) to learn more about connection strings.
 | `MONGO_DB_NAME` | string | `true` | Name of the Database the data sould be stored in
-| `MONGO_COL_PREFIX` | string | `false` | Prefix for the MongoDB Collections used by this module. The default is an empty String.
+| `MONGO_COL_PREFIX` | string | `false` | Prefix for the MongoDB Collections for events, snapshots and trackings. The default is an empty String.
+| `MONGO_COUNTTRACK_COL_NAME` | string | `false` | Name of the MongoDB Collection for count trakcings. The default is CountTracking. (You can use the same name for multiple applications)
 
 
 

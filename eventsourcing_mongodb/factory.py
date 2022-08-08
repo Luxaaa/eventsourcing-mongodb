@@ -8,6 +8,7 @@ class Factory(InfrastructureFactory):
     MONGO_CONNECTION_STRING = 'MONGO_CONNECTION_STRING'
     MONGO_DB_NAME = 'MONGO_DB_NAME'
     MONGO_COL_PREFIX = 'MONGO_COL_PREFIX'
+    MONGO_COUNTTRACK_COL_NAME = 'MONGO_COUNTTRACK_COL_NAME'
 
     def __init__(self, env: Environment):
         super().__init__(env)
@@ -23,27 +24,27 @@ class Factory(InfrastructureFactory):
         self.datastore = MongoDataStore(conn_str, db_name)
 
     def aggregate_recorder(self, purpose: str = "events") -> AggregateRecorder:
-        recorder = MongoDBAggregateRecorder(self.datastore, self._ev_ol_name(purpose),
-                                            count_track_collection_name=self._ctrack_col_name())
+        recorder = MongoDBAggregateRecorder(self.datastore, self._events_collection_name(purpose),
+                                            count_track_collection_name=self._count_track_collection_name())
         return recorder
 
     def application_recorder(self) -> ApplicationRecorder:
-        recorder = MongoDBApplicationRecorder(self.datastore, self._ev_ol_name('events'),
-                                              count_track_collection_name=self._ctrack_col_name())
+        recorder = MongoDBApplicationRecorder(self.datastore, self._events_collection_name('events'),
+                                              count_track_collection_name=self._count_track_collection_name())
         return recorder
 
     def process_recorder(self) -> ProcessRecorder:
-        recorder = MongoDBProcessRecorder(self.datastore, self._ev_ol_name('events'),
-                                          count_track_collection_name=self._ctrack_col_name(),
-                                          trackings_collection_name=self._trackings_col_name()
+        recorder = MongoDBProcessRecorder(self.datastore, self._events_collection_name('events'),
+                                          count_track_collection_name=self._count_track_collection_name(),
+                                          trackings_collection_name=self._trackings_collection_name()
                                           )
         return recorder
 
-    def _ev_ol_name(self, purpose: str):
+    def _events_collection_name(self, purpose: str):
         return self.env.get(self.MONGO_COL_PREFIX, '') + purpose.capitalize()
 
-    def _ctrack_col_name(self):
-        return self.env.get(self.MONGO_COL_PREFIX, '') + 'CountTrackers'
+    def _count_track_collection_name(self):
+        return self.env.get(self.MONGO_COUNTTRACK_COL_NAME, 'CountTracking')
 
-    def _trackings_col_name(self):
+    def _trackings_collection_name(self):
         return self.env.get(self.MONGO_COL_PREFIX, 'Trackings')
