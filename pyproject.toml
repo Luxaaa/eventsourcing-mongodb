@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eventsourcing-mongodb"
-version = "1.0.0"
+version = "2.0.1"
 description = "An extension package for the Python Eventsourcing library that provides a persistence module for MongoDB."
 readme = "README.md"
 authors = [{ name = "Luxaaa"}]

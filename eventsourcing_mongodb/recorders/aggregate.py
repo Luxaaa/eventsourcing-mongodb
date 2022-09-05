@@ -64,7 +64,7 @@ class MongoDBAggregateRecorder(AggregateRecorder):
     def _select_events_query(cls, originator_id: UUID, gt: Optional[int] = None, lte: Optional[int] = None) -> dict:
         query = {'originator_id': {'$eq': originator_id}}
         if gt:
-            query['version'] = {'$gte': gt}
+            query['originator_version'] = {'$gt': gt}
         if lte:
             if query.get('originator_version') is not None:
                 query['originator_version']['$lte'] = lte
