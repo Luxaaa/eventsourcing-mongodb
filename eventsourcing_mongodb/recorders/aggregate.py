@@ -1,20 +1,22 @@
 from eventsourcing.persistence import AggregateRecorder, StoredEvent
 from eventsourcing_mongodb.datastore import MongoDataStore
 import pymongo
-from uuid import UUID
+from uuid import UUID, uuid4
 from typing import List, Optional, Sequence, Dict, Any
 
 
 class MongoDBAggregateRecorder(AggregateRecorder):
-    def __init__(self, datastore: MongoDataStore, events_collection_name: str,
-                 count_track_collection_name='EventCountTrackers'):
+    def __init__(self, datastore: MongoDataStore, events_collection_name: str):
         self.datastore = datastore
         self.events_col_name = events_collection_name
-        self.count_track_col_name = count_track_collection_name
 
-    def insert_events(self, stored_events: List[StoredEvent], **kwargs: Any) -> Optional[Sequence[int]]:
+    def insert_events(self, stored_events: List[StoredEvent], **kwargs: Any) -> Optional[Sequence[Any]]:
         documents = self._stored_events_to_documents(stored_events)
         collection = self.datastore.get_collection(self.events_col_name)  # database collection
+        # remove older snaoshots
+        if self.events_col_name.endswith('Snapshots'):
+            originator_ids = [doc['originator_id'] for doc in documents]
+            collection.delete_many({'originator_id': {'$in': originator_ids}})
         collection.insert_many(documents)
         return [doc['_id'] for doc in documents]
 
@@ -35,16 +37,10 @@ class MongoDBAggregateRecorder(AggregateRecorder):
         documents = list(cursor)
         return self._documents_to_stored_events(documents)
 
-    def _get_next_doc_id_and_update_counter(self, col_name: str, amount_of_docs: int):
-        col = self.datastore.get_collection(self.count_track_col_name)
-        counter_doc = col.find_one_and_update({'_id': col_name}, {'$inc': {'counter': amount_of_docs}}, upsert=True)
-        return counter_doc['counter'] + 1 if counter_doc else 1
-
     def _stored_events_to_documents(self, stored_events: List[StoredEvent]) -> List[Dict[str, Any]]:
         """ converts a list of stored events into dicts which can be inserted into mongodb. """
-        start_id = self._get_next_doc_id_and_update_counter(self.events_col_name, len(stored_events))
         return [{
-            '_id': start_id + idx,
+            '_id': uuid4(),
             'originator_id': e.originator_id,
             'originator_version': e.originator_version,
             'topic': e.topic,

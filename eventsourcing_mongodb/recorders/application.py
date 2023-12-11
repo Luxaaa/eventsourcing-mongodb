@@ -7,9 +7,8 @@ from eventsourcing_mongodb.recorders.aggregate import MongoDBAggregateRecorder
 
 
 class MongoDBApplicationRecorder(MongoDBAggregateRecorder, ApplicationRecorder):
-    def __init__(self, datastore: MongoDataStore, events_collection_name: str,
-                 count_track_collection_name='EventCountTrackers'):
-        super().__init__(datastore, events_collection_name, count_track_collection_name=count_track_collection_name)
+    def __init__(self, datastore: MongoDataStore, events_collection_name: str):
+        super().__init__(datastore, events_collection_name)
 
     def select_notifications(
             self,
@@ -26,17 +25,15 @@ class MongoDBApplicationRecorder(MongoDBAggregateRecorder, ApplicationRecorder):
         notifications = self._documents_to_notifications(documents)
         return notifications
 
-    def max_notification_id(self) -> int:
-        collection = self.datastore.get_collection(self.count_track_col_name)
-        count_doc = collection.find_one({'_id': self.events_col_name})
-        return count_doc['counter'] if count_doc else 0
+    def max_notification_id(self):
+        return 0
 
     @classmethod
     def _build_select_notifications_query(cls, start: int, stop: Optional[int] = None,
                                           topics: Sequence[str] = ()) -> dict:
-        query = {'_id': {'$gte': start}}
+        query = {'originator_version': {'$gte': start}}
         if stop:
-            query['_id']['$lte'] = stop
+            query['originator_version']['$lte'] = stop
         if topics:
             query['topic'] = {'$in': topics}
         return query
